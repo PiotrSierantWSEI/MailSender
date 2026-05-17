@@ -1,10 +1,13 @@
+using MailSender.Application.Abstractions.Mail;
 using MailSender.Application.Abstractions.SharedConstants;
 
 namespace MailSender.Application.MailSend;
 
-public sealed class MailSendAppUseCase
+public sealed class MailSendAppUseCase(IEmailProvider emailProvider)
 {
-    public Task<MailSendResult> ExecuteAsync(
+    private readonly IEmailProvider _emailProvider = emailProvider;
+
+    public async Task<MailSendResult> ExecuteAsync(
         MailSendCommand command,
         CancellationToken cancellationToken)
     {
@@ -39,11 +42,15 @@ public sealed class MailSendAppUseCase
                 StringComparison.OrdinalIgnoreCase);
         }
 
-        return Task.FromResult(
-            new MailSendResult(
-                command.AppId,
-                command.AppName,
-                MailSendStatus.Success,
-                new MailSendEmailObject(command.To, subject, body)));
+        var sendResult = await _emailProvider.SendEmailAsync(
+            new EmailMessage(command.To, subject, body),
+            cancellationToken);
+
+        return new MailSendResult(
+            command.AppId,
+            command.AppName,
+            sendResult.Success ? MailSendStatus.Success : MailSendStatus.Failure,
+            new MailSendEmailObject(command.To, subject, body),
+            sendResult.Error);
     }
 }

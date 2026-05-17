@@ -4,7 +4,8 @@ public sealed record MailSendResult(
     string AppId,
     string AppName,
     MailSendStatus Status,
-    MailSendEmailObject Email
+    MailSendEmailObject Email,
+    string? Error = null
     );
 
 public sealed record MailSendEmailObject(

@@ -33,7 +33,11 @@ public static class MailSendEndpoints
             new MailSendCommand(appId, appName, request.To, request.Subject, request.Body),
             cancellationToken);
 
-
+        if (result.Status == MailSendStatus.Failure)
+        {
+            return Results.Problem(result.Error ?? "Unknown error", statusCode: 500);
+        }
+        
         return Results.Ok(result); // Kod 200 OK, mozna pomyslec o 202 Accepted jesli mail trafi do kolejki asynchronicznej
     }
 }

@@ -1,8 +1,11 @@
 using System.Text;
 using MailSender.Application.Abstractions.Auth;
 using MailSender.Application.Abstractions.ClientApp;
+using MailSender.Application.Abstractions.Mail;
 using MailSender.Infrastructure.Authentication;
 using MailSender.Infrastructure.Configuration;
+using MailSender.Infrastructure.Mail;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -56,11 +59,25 @@ public static class DependencyInjection
             .AddAuthorizationBuilder()
             .AddPolicy("ClientApp", policy => policy.RequireClaim("app_id"));
 
+        services
+            .AddOptions<BrevoOptions>()
+            .Bind(configuration.GetSection(BrevoOptions.SectionName))
+            .Validate(
+                options =>
+                    !string.IsNullOrWhiteSpace(options.SmtpHost) &&
+                    options.SmtpPort > 0 &&
+                    !string.IsNullOrWhiteSpace(options.SmtpLogin) &&
+                    !string.IsNullOrWhiteSpace(options.SmtpPassword) &&
+                    !string.IsNullOrWhiteSpace(options.SenderEmail),
+                "Brevo configuration is invalid.")
+            .ValidateOnStart();
+
         // Konfiguracja usług związanych z uwierzytelnianiem
         services.AddScoped<ICredentialValidator, ConfigurationCredentialValidator>();
         services.AddScoped<IAccessTokenIssuer, JwtAccessTokenIssuer>();
         services.AddScoped<IClientAppAccessTokenIssuer, ClientAppAccessTokenIssuer>();
         services.AddScoped<IClientAppPasswordValidator, ClientAppPasswordValidator>();
+        services.AddScoped<IEmailProvider, BrevoEmailProvider>();
 
         return services;
     }
