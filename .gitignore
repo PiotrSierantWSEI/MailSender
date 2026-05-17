@@ -1,0 +1,18 @@
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+.vs/
+.vscode/
+.idea/
+.DS_Store
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Local environment
+appsettings.Development.json
+appsettings.development.json
