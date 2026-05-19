@@ -8,7 +8,7 @@ using MailSender.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MailSender.Infrastructure.Authentication;
+namespace MailSender.Infrastructure.ClientApp;
 
 // PROCES TWORZENIA TOKENA JWT:
 // 1. Pobieramy konfigurację JWT z pliku appsettings.json i mapujemy ją do obiektu JwtOptions.

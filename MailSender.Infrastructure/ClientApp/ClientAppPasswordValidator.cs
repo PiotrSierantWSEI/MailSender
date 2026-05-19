@@ -3,7 +3,7 @@ using MailSender.Application.Abstractions.ClientApp;
 using MailSender.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace MailSender.Infrastructure.Authentication;
+namespace MailSender.Infrastructure.ClientApp;
 
 // PROCES WALIDACJI HASŁA APLIKACJI KLIENTA:
 // 1. Pobieramy listę dozwolonych haseł z konfiguracji (ClientAppsOptions) i iterujemy przez nią, porównując każde hasło z hasłem przekazanym przez klienta. Tutaj mamy hasła z naszą końcówką indeksu.

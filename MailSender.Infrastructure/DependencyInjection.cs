@@ -3,6 +3,7 @@ using MailSender.Application.Abstractions.Auth;
 using MailSender.Application.Abstractions.ClientApp;
 using MailSender.Application.Abstractions.Mail;
 using MailSender.Infrastructure.Authentication;
+using MailSender.Infrastructure.ClientApp;
 using MailSender.Infrastructure.Configuration;
 using MailSender.Infrastructure.Mail;
 
@@ -59,6 +60,7 @@ public static class DependencyInjection
             .AddAuthorizationBuilder()
             .AddPolicy("ClientApp", policy => policy.RequireClaim("app_id"));
 
+        // dodanie zmiennych z appsettings.json do konteneru DI, zeby mozna bylo je wstrzykiwac do providerów mailowych
         services
             .AddOptions<BrevoOptions>()
             .Bind(configuration.GetSection(BrevoOptions.SectionName))
@@ -72,13 +74,33 @@ public static class DependencyInjection
                 "Brevo configuration is invalid.")
             .ValidateOnStart();
 
-        // Konfiguracja usług związanych z uwierzytelnianiem
+        services
+            .AddOptions<MailTrapOptions>()
+            .Bind(configuration.GetSection(MailTrapOptions.SectionName))
+            .Validate(
+                options =>
+                    !string.IsNullOrWhiteSpace(options.SmtpHost) &&
+                    options.SmtpPort > 0 &&
+                    !string.IsNullOrWhiteSpace(options.SmtpLogin) &&
+                    !string.IsNullOrWhiteSpace(options.SmtpPassword) &&
+                    !string.IsNullOrWhiteSpace(options.SenderEmail),
+                "MailTrap configuration is invalid.")
+            .ValidateOnStart();
+
+        // Dependency Injection
         services.AddScoped<ICredentialValidator, ConfigurationCredentialValidator>();
         services.AddScoped<IAccessTokenIssuer, JwtAccessTokenIssuer>();
         services.AddScoped<IClientAppAccessTokenIssuer, ClientAppAccessTokenIssuer>();
         services.AddScoped<IClientAppPasswordValidator, ClientAppPasswordValidator>();
-        services.AddScoped<IEmailProvider, BrevoEmailProvider>();
 
+        // Singleton ponieważ chcemy mieć w pamięci - jesli uzyjemy scoped to przy kazdym requestcie bedzie tworzona nowa instancja
+        services.AddSingleton<IClientAppRegistry, ClientAppRegistryInMemory>();
+
+        // DI providerów
+        // services.AddScoped<IEmailProvider, BrevoEmailProvider>();
+        services.AddScoped<IEmailProvider, MailTrapEmailProvider>();
+        // Zmiana providera mailowego odbywa sie przez podmiane implementacji IEmailProvidera.
+        // services.AddScoped<IEmailProvider, <inny provider>>();
         return services;
     }
 }

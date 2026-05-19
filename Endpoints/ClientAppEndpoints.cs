@@ -30,6 +30,7 @@ public static class ClientAppEndpoints
         // Zwracamy błąd 403 Forbidden, jeśli hasło jest nieprawidłowe (MyLastTwoIndexNumbers jest równy SharedConstants.LastTwoIndexNumbers)
         if (result is null)
         {
+            // todo: nie obslugujemy rozroznienia miedzy niepoprawnym haslem a istniejaca aplikacja o takim samym id lub nazwie. Nic nie ma na ten temat w zadaniu.
             return Results.Json(
                 new { error = $"Invalid index-based password {MyLastTwoIndexNumbers}" },
                 statusCode: StatusCodes.Status403Forbidden);

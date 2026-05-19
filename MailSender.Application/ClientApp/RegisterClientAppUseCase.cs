@@ -6,7 +6,8 @@ namespace MailSender.Application.ClientApp;
 
 public sealed class RegisterClientAppUseCase(
     IClientAppPasswordValidator passwordValidator,
-    IClientAppAccessTokenIssuer accessTokenIssuer)
+    IClientAppAccessTokenIssuer accessTokenIssuer,
+    IClientAppRegistry clientAppRegistry)
 {
     public async Task<(RegisterClientAppResult?, int)> ExecuteAsync(
         RegisterClientAppCommand command,
@@ -29,10 +30,20 @@ public sealed class RegisterClientAppUseCase(
             return (null, MyLastTwoIndexNumbers);
         }
 
+        // sprawdzamy czy aplikacja o podanym ID lub nazwie istnieje w pamieci
+        if (clientAppRegistry.GetRegisteredAppById(command.AppId) != null ||
+            clientAppRegistry.GetRegisteredAppByName(command.AppName) != null)
+        {
+            // Aplikacja o podanym ID lub nazwie już istnieje, zwracamy null i dwie ostatnie cyfry indeksu
+            return (null, SharedConstants.LastTwoIndexNumbers);
+        }
+
         // Hasło jest poprawne, generujemy token dostępu dla aplikacji klienta
         var clientApplication = new ClientAppIdentity(command.AppId, command.AppName);
         var result = await accessTokenIssuer.IssueAsync(clientApplication, cancellationToken);
 
-        return (result, MyLastTwoIndexNumbers);
+        // na koniec rejestracja aplikacji w pamieci.
+        clientAppRegistry.RegisterClientApp(clientApplication);
+        return (result, SharedConstants.LastTwoIndexNumbers);
     }
 }
