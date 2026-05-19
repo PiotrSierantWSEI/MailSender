@@ -1,0 +1,1 @@
+{"version":3,"file":"MailSendRequest.d.ts","sourceRoot":"","sources":["../../client-ts/models/MailSendRequest.ts"],"names":[],"mappings":"AAIA,MAAM,MAAM,eAAe,GAAG;IAC1B,EAAE,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;IACnB,OAAO,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;IACxB,IAAI,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxB,CAAC"}

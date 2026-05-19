@@ -1,0 +1,1 @@
+{"version":3,"file":"RegisterClientAppRequest.d.ts","sourceRoot":"","sources":["../../client-ts/models/RegisterClientAppRequest.ts"],"names":[],"mappings":"AAIA,MAAM,MAAM,wBAAwB,GAAG;IACnC,KAAK,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;IACtB,OAAO,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;IACxB,IAAI,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxB,CAAC"}
