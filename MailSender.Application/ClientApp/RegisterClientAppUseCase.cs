@@ -18,7 +18,7 @@ public sealed class RegisterClientAppUseCase(
             string.IsNullOrWhiteSpace(command.AppName) ||
             string.IsNullOrWhiteSpace(command.Pass))
         {
-            return (null, SharedConstants.LastTwoIndexNumbers);
+            return (new RegisterClientAppResult(null, null, RegisterClientAppError.InvalidInput), SharedConstants.LastTwoIndexNumbers);
         }
 
         // Walidacja hasła
@@ -27,7 +27,7 @@ public sealed class RegisterClientAppUseCase(
         if (!isValid)
         {
             // Niepoprawne hasło, zwracamy null i dwie ostatnie cyfry indeksu
-            return (null, MyLastTwoIndexNumbers);
+            return (new RegisterClientAppResult(null, null, RegisterClientAppError.InvalidPassword), MyLastTwoIndexNumbers);
         }
 
         // sprawdzamy czy aplikacja o podanym ID lub nazwie istnieje w pamieci
@@ -35,7 +35,7 @@ public sealed class RegisterClientAppUseCase(
             clientAppRegistry.GetRegisteredAppByName(command.AppName) != null)
         {
             // Aplikacja o podanym ID lub nazwie już istnieje, zwracamy null i dwie ostatnie cyfry indeksu
-            return (null, SharedConstants.LastTwoIndexNumbers);
+            return (new RegisterClientAppResult(null, null, RegisterClientAppError.AppAlreadyExists), SharedConstants.LastTwoIndexNumbers);
         }
 
         // Hasło jest poprawne, generujemy token dostępu dla aplikacji klienta

@@ -50,6 +50,6 @@ public sealed class ClientAppAccessTokenIssuer(IOptions<JwtOptions> options) : I
         // Serializujemy token do formatu string, który będzie zwracany klientowi.
         var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return Task.FromResult(new RegisterClientAppResult(accessToken, expiresAt));
+        return Task.FromResult(new RegisterClientAppResult(accessToken, expiresAt, RegisterClientAppError.None));
     }
 }
