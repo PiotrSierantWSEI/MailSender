@@ -1,7 +1,7 @@
 using MailSender.Application.Abstractions.Mail;
 using MailSender.Application.Abstractions.SharedConstants;
 using MailSender.Application.Abstractions.Log;
-using MailSender.Domain.Log;
+using MailSender.Domain.LogRegistry;
 
 namespace MailSender.Application.MailSend;
 
@@ -50,7 +50,7 @@ public sealed class MailSendAppUseCase(IEmailProvider emailProvider, ILogRegistr
             cancellationToken);
 
         // dodajemy log do pamieci
-        var logEntry = new LogIdentity(sendResult.Success ? "Success" : "Failure", command.AppId, command.AppName, sendResult.Error, DateTime.UtcNow);
+        var logEntry = new LogIdentity(Guid.NewGuid().ToString(), sendResult.Success ? "Success" : "Failure", command.AppId, command.AppName, sendResult.Error, DateTime.UtcNow);
         _logRegistry.RegisterLog(logEntry);
 
         return new MailSendResult(

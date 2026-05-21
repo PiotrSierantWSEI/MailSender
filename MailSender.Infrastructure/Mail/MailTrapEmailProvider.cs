@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Mail;
-
 using MailSender.Application.Abstractions.Mail;
 using MailSender.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
@@ -51,7 +50,7 @@ public sealed class MailTrapEmailProvider(IOptions<MailTrapOptions> options) : I
             /* Send method called below is what will send off our email 
             * unless an exception is thrown.
             */
-            smtp.Send(email);
+            await smtp.SendMailAsync(email, cancellationToken);
             return new EmailSendResult(true);
         }
         catch (SmtpException exception)

@@ -2,10 +2,12 @@ using System.Text;
 using MailSender.Application.Abstractions.Auth;
 using MailSender.Application.Abstractions.ClientApp;
 using MailSender.Application.Abstractions.Mail;
+using MailSender.Application.Abstractions.Log;
 using MailSender.Infrastructure.Authentication;
 using MailSender.Infrastructure.ClientApp;
 using MailSender.Infrastructure.Configuration;
 using MailSender.Infrastructure.Mail;
+using MailSender.Infrastructure.LogRegistry;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -93,14 +95,16 @@ public static class DependencyInjection
         services.AddScoped<IClientAppAccessTokenIssuer, ClientAppAccessTokenIssuer>();
         services.AddScoped<IClientAppPasswordValidator, ClientAppPasswordValidator>();
 
+
         // Singleton ponieważ chcemy mieć w pamięci - jesli uzyjemy scoped to przy kazdym requestcie bedzie tworzona nowa instancja
         services.AddSingleton<IClientAppRegistry, ClientAppRegistryInMemory>();
 
         // DI providerów
-        // services.AddScoped<IEmailProvider, BrevoEmailProvider>();
-        services.AddScoped<IEmailProvider, MailTrapEmailProvider>();
+        services.AddScoped<IEmailProvider, BrevoEmailProvider>();
+        // services.AddScoped<IEmailProvider, MailTrapEmailProvider>();
         // Zmiana providera mailowego odbywa sie przez podmiane implementacji IEmailProvidera.
         // services.AddScoped<IEmailProvider, <inny provider>>();
+        services.AddSingleton<ILogRegistry, LogRegistryInMemory>();
         return services;
     }
 }

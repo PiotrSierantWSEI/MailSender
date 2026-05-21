@@ -10,6 +10,8 @@ public static class EndpointMappings
         app.MapAuthEndpoints();
         app.MapClientAppEndpoints();
         app.MapMailSendEndpoints();
+        app.GetClientAppLogsEndpoints();
+        app.GetClientAppLogByIdEndpoints();
 
         return app;
     }

@@ -3,6 +3,7 @@ using System.Text;
 using MailSender.Application.Auth;
 using MailSender.Application.MailSend;
 using MailSender.Application.ClientApp;
+using MailSender.Application.Log;
 using MailSender.Infrastructure;
 using MailSender.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<AuthenticateUserUseCase>();
         services.AddScoped<RegisterClientAppUseCase>();
         services.AddScoped<MailSendAppUseCase>();
+        services.AddScoped<LogUseCase>();
         // Rejestracja infrastruktury - tutaj dodajemy wszystkie zależności z warstwy infrastruktury.
         services.AddInfrastructure(configuration);
 

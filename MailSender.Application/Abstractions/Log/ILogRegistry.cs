@@ -1,4 +1,4 @@
-using MailSender.Domain.Log;
+using MailSender.Domain.LogRegistry;
 
 namespace MailSender.Application.Abstractions.Log;
 
@@ -7,6 +7,5 @@ public interface ILogRegistry
 {
     IReadOnlyList<LogIdentity> GetAllClientApps();
     IReadOnlyList<LogIdentity> GetAllClientAppsByAppId(string appId);
-    IReadOnlyList<LogIdentity> GetAllClientAppsByAppName(string appName);
     void RegisterLog(LogIdentity log);
 }
