@@ -1,11 +1,14 @@
 using MailSender.Application.Abstractions.Mail;
 using MailSender.Application.Abstractions.SharedConstants;
+using MailSender.Application.Abstractions.Log;
+using MailSender.Domain.Log;
 
 namespace MailSender.Application.MailSend;
 
-public sealed class MailSendAppUseCase(IEmailProvider emailProvider)
+public sealed class MailSendAppUseCase(IEmailProvider emailProvider, ILogRegistry logRegistry)
 {
     private readonly IEmailProvider _emailProvider = emailProvider;
+    private readonly ILogRegistry _logRegistry = logRegistry;
 
     public async Task<MailSendResult> ExecuteAsync(
         MailSendCommand command,
@@ -45,6 +48,10 @@ public sealed class MailSendAppUseCase(IEmailProvider emailProvider)
         var sendResult = await _emailProvider.SendEmailAsync(
             new EmailMessage(command.To, subject, body),
             cancellationToken);
+
+        // dodajemy log do pamieci
+        var logEntry = new LogIdentity(sendResult.Success ? "Success" : "Failure", command.AppId, command.AppName, sendResult.Error, DateTime.UtcNow);
+        _logRegistry.RegisterLog(logEntry);
 
         return new MailSendResult(
             command.AppId,

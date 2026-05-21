@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MailSender.Domain\MailSender.Domain.csproj" />
+    <ProjectReference Include="..\MailSender.Infrastructure\MailSender.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
