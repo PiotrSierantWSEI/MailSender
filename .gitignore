@@ -16,3 +16,6 @@ packages/
 # Local environment
 appsettings.Development.json
 appsettings.development.json
+
+# User secrets
+team.txt
